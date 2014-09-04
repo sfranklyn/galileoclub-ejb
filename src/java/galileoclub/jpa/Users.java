@@ -98,10 +98,6 @@ public class Users implements Serializable {
     private String userPcc;
     @Column(name = "user_son", length = 10)
     private String userSon;
-    @Column(name = "user_pcc1", length = 10)
-    private String userPcc1;
-    @Column(name = "user_son1", length = 10)
-    private String userSon1;
     @Column(name = "user_agentname", length = 50)
     private String userAgentName;
     @Column(name = "user_office_address1", length = 50)
@@ -221,22 +217,6 @@ public class Users implements Serializable {
 
     public void setUserSon(String userSon) {
         this.userSon = userSon;
-    }
-
-    public String getUserPcc1() {
-        return userPcc1;
-    }
-
-    public void setUserPcc1(String userPcc1) {
-        this.userPcc1 = userPcc1;
-    }
-
-    public String getUserSon1() {
-        return userSon1;
-    }
-
-    public void setUserSon1(String userSon1) {
-        this.userSon1 = userSon1;
     }
 
     public String getUserAgentName() {
