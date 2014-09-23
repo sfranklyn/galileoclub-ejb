@@ -26,7 +26,7 @@ public class RolesServiceBean implements RolesServiceRemote {
     private static final Logger log = Logger.getLogger(RolesServiceBean.class.getName());
     private static final String MESSAGES = "ejbmessages";
     @EJB
-    private RolesDaoRemote rolesDaoRemote = null;
+    private RolesDaoRemote rolesDaoRemote;
 
     public List<String> saveCreate(Roles roles, Locale locale) {
         List<String> errorList = new ArrayList<String>();

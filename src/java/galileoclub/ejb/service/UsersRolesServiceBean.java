@@ -30,11 +30,11 @@ public class UsersRolesServiceBean implements UsersRolesServiceRemote {
     private static final Logger log = Logger.getLogger(UsersRolesServiceBean.class.getName());
     private static final String MESSAGES = "ejbmessages";
     @EJB
-    private UsersDaoRemote usersDaoRemote = null;
+    private UsersDaoRemote usersDaoRemote;
     @EJB
-    private RolesDaoRemote rolesDaoRemote = null;
+    private RolesDaoRemote rolesDaoRemote;
     @EJB
-    private UsersRolesDaoRemote usersRolesDaoRemote = null;
+    private UsersRolesDaoRemote usersRolesDaoRemote;
 
     public List<String> saveCreate(UsersRoles usersRoles, Locale locale) {
         List<String> errorList = new ArrayList<String>();

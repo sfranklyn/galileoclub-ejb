@@ -108,8 +108,7 @@ public class Claims implements Serializable {
     private Collection<Points> pointsCollection;
     @Transient
     private Users users;
-    @Transient
-    private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm:ss");
+    
 
     public Claims() {
     }
@@ -140,6 +139,7 @@ public class Claims implements Serializable {
     }
 
     public String getClaimDateFormatted() {
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm:ss");
         return dtf.print(claimDate.getTime());
     }
 

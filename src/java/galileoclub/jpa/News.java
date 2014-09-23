@@ -62,8 +62,7 @@ public class News implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     @ManyToOne(optional = false)
     private Users userId;
-    @Transient
-    private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm:ss");
+    
 
     public News() {
     }
@@ -77,6 +76,7 @@ public class News implements Serializable {
     }
 
     public String getNewsDateFormatted() {
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MMM-yyyy HH:mm:ss");
         return dtf.print(newsDate.getTime());
     }
 

@@ -6,18 +6,10 @@
 package galileoclub.jpa;
 
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Version;
+import javax.persistence.*;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+
 
 /**
  *
@@ -27,7 +19,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 @Table(name = "pccs")
 @NamedQueries({
     @NamedQuery(name = "Pccs.selectAll",
-    query = "SELECT p FROM Pccs p"),
+    query = "SELECT p FROM Pccs p ORDER BY p.pccsPcc"),
     @NamedQuery(name = "Pccs.selectAllCount",
     query = "SELECT COUNT(p) FROM Pccs p"),
     @NamedQuery(name = "Pccs.findByPccsId",

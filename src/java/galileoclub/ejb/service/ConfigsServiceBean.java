@@ -38,7 +38,7 @@ public class ConfigsServiceBean implements ConfigsServiceRemote {
     @PersistenceContext
     private EntityManager em;
     @EJB
-    private ConfigsDaoRemote configsDaoRemote = null;
+    private ConfigsDaoRemote configsDaoRemote;
 
     public Configs getByKey(String configKey) {
         Query query = em.createNamedQuery("Configs.findByConfigKey");

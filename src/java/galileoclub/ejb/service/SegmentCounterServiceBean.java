@@ -73,32 +73,28 @@ import org.joda.time.format.DateTimeFormatter;
 @Stateless
 public class SegmentCounterServiceBean implements SegmentCounterServiceRemote {
 
-    private static final Logger log = Logger.getLogger(SegmentCounterServiceBean.class.getName());
-    private static final DateTimeFormatter dtfdM = DateTimeFormat.forPattern("ddMMM");
-    private static final DateTimeFormatter dtfdMY = DateTimeFormat.forPattern("ddMMMyy");
-    private static final DateTimeFormatter dtfYM = DateTimeFormat.forPattern("yyyyMM");
-    private static final DateTimeFormatter dtfYMD = DateTimeFormat.forPattern("yyyyMMdd");
+    private static final Logger log = Logger.getLogger(SegmentCounterServiceBean.class.getName());    
     private static final Pattern linePattern = Pattern.compile("\\r", Pattern.DOTALL | Pattern.MULTILINE);
     private static final String xmlHeader = "<PNRBFManagement_10>";
     private static final String soapHeader = "<PNRBFManagement_10 " + "xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' " + "xmlns='http://www.galileoindonesia.com/schema/PNR' " + "xsi:schemaLocation='http://www.galileoindonesia.com/schema/PNR " + "PNRBFManagement10.xsd'>";
     private static boolean debug = false;
     private JAXBContext bookingJc = null;
     @EJB
-    private ConfigsServiceRemote configsServiceRemote = null;
+    private ConfigsServiceRemote configsServiceRemote;
     @EJB
-    private PnrsDaoRemote pnrsDaoRemote = null;
+    private PnrsDaoRemote pnrsDaoRemote;
     @EJB
-    private PccsDataModelRemote pccsDataModelRemote = null;
+    private PccsDataModelRemote pccsDataModelRemote;
     @EJB
-    private PnrsDataModelRemote pnrsDataModelRemote = null;
+    private PnrsDataModelRemote pnrsDataModelRemote;
     @EJB
-    private PnrcountsDaoRemote pnrcountsDaoRemote = null;
+    private PnrcountsDaoRemote pnrcountsDaoRemote;
     @EJB
-    private PnrcountsDataModelRemote pnrcountsDataModelRemote = null;
+    private PnrcountsDataModelRemote pnrcountsDataModelRemote;
     @EJB
-    private PointsDaoRemote pointsDaoRemote = null;
+    private PointsDaoRemote pointsDaoRemote;
     @EJB
-    private PccsDaoRemote pccsDaoRemote = null;
+    private PccsDaoRemote pccsDaoRemote;
 
     @TransactionAttribute(TransactionAttributeType.NEVER)
     @Override
@@ -222,6 +218,7 @@ public class SegmentCounterServiceBean implements SegmentCounterServiceRemote {
         try {
             suta = SutaFactory.createScriptableUniversalTransAgent();
             suta.hcmName(hcm);
+            DateTimeFormatter dtfdM = DateTimeFormat.forPattern("ddMMM");
             String dayStr = dtfdM.print(day).toUpperCase();
 
             DateTime sixMonth = day.plusMonths(6);
@@ -279,7 +276,8 @@ public class SegmentCounterServiceBean implements SegmentCounterServiceRemote {
                             String son = lines[idx1].substring(32, 34);
                             pnrs.setPnrsSignon(son);
                             Date created = day.toDate();
-                            try {
+                            DateTimeFormatter dtfdMY = DateTimeFormat.forPattern("ddMMMyy");
+                            try {                                
                                 created = new Date(dtfdMY.parseDateTime(lines[idx1].substring(41, 48)).toDate().getTime());
                             } catch (Exception ex) {
                             }
@@ -457,7 +455,9 @@ public class SegmentCounterServiceBean implements SegmentCounterServiceRemote {
                     int waitSegCountOldCount = pnrs.getPnrsWaitcount();
                     boolean segCountNew = pnrs.getPnrsNew();
                     DateTime countDate = new DateTime();
+                    DateTimeFormatter dtfYM = DateTimeFormat.forPattern("yyyyMM");
                     String dayYM = dtfYM.print(countDate.minusDays(1));
+                    DateTimeFormatter dtfYMD = DateTimeFormat.forPattern("yyyyMMdd");
                     String dayYMD = dtfYMD.print(countDate.minusDays(1));
 
                     if (segCountNew) {

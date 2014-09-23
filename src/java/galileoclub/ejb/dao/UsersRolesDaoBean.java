@@ -21,11 +21,13 @@ public class UsersRolesDaoBean implements UsersRolesDaoRemote {
     @PersistenceContext
     private EntityManager em;
 
+    @Override
     public void insert(UsersRoles userRole) {
         em.persist(userRole);
         em.flush();
     }
 
+    @Override
     public void delete(UsersRolesPK usersRolesPK) {
         UsersRoles usersRoles = em.find(UsersRoles.class, usersRolesPK);
         em.remove(usersRoles);

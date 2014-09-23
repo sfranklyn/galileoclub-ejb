@@ -28,10 +28,11 @@ public class UrlsRolesServiceBean implements UrlsRolesServiceRemote {
     private static final Logger log = Logger.getLogger(UrlsRolesServiceBean.class.getName());
     private static final String MESSAGES = "ejbmessages";
     @EJB
-    private RolesDaoRemote rolesDaoRemote = null;
+    private RolesDaoRemote rolesDaoRemote;
     @EJB
-    private UrlsRolesDaoRemote urlsRolesDaoRemote = null;
+    private UrlsRolesDaoRemote urlsRolesDaoRemote;
 
+    @Override
     public List<String> saveCreate(UrlsRoles urlsRoles, Locale locale) {
         List<String> errorList = new ArrayList<String>();
         ResourceBundle messageSource = ResourceBundle.getBundle(MESSAGES, locale);
@@ -41,7 +42,7 @@ public class UrlsRolesServiceBean implements UrlsRolesServiceRemote {
         if ("".equals(urlsRoles.getRoles().getRoleName())) {
             errorList.add(messageSource.getString("role_name_required"));
         }
-        if (errorList.size() == 0) {
+        if (errorList.isEmpty()) {
             try {
                 Roles roles = rolesDaoRemote.selectByRoleName(urlsRoles.getRoles().getRoleName());
                 urlsRoles.setRoles(roles);
@@ -57,7 +58,7 @@ public class UrlsRolesServiceBean implements UrlsRolesServiceRemote {
                     }
                     cause = cause.getCause();
                 }
-                if (errorList.size() == 0) {
+                if (errorList.isEmpty()) {
                     errorList.add(ex.toString());
                 }
                 if (!duplicate) {
@@ -68,6 +69,7 @@ public class UrlsRolesServiceBean implements UrlsRolesServiceRemote {
         return errorList;
     }
 
+    @Override
     public List<String> saveDelete(UrlsRoles urlsRoles, Locale locale) {
         List<String> errorList = new ArrayList<String>();
         ResourceBundle messageSource = ResourceBundle.getBundle(MESSAGES, locale);
@@ -77,7 +79,7 @@ public class UrlsRolesServiceBean implements UrlsRolesServiceRemote {
         if ("".equals(urlsRoles.getRoles().getRoleName())) {
             errorList.add(messageSource.getString("role_name_required"));
         }
-        if (errorList.size() == 0) {
+        if (errorList.isEmpty()) {
             try {
                 urlsRolesDaoRemote.delete(urlsRoles.getUrlsRolesPK());
             } catch (Exception ex) {

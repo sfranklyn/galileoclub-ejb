@@ -33,11 +33,11 @@ public class ClaimsServiceBean implements ClaimsServiceRemote {
     private static final Logger log = Logger.getLogger(ClaimsServiceBean.class.getName());
     private static final String MESSAGES = "ejbmessages";
     @EJB
-    private ClaimsDaoRemote claimsDaoRemote = null;
+    private ClaimsDaoRemote claimsDaoRemote;
     @EJB
-    private PointsDaoRemote pointsDaoRemote = null;
+    private PointsDaoRemote pointsDaoRemote;
     @EJB
-    private UsersDaoRemote usersDaoRemote = null;
+    private UsersDaoRemote usersDaoRemote;
 
     @Override
     public List<String> saveClaimReward(Claims claims, Locale locale) {
@@ -49,7 +49,7 @@ public class ClaimsServiceBean implements ClaimsServiceRemote {
         if ("".equals(claims.getClaimDesc())) {
             errorList.add(messageSource.getString("claim_desc_required"));
         }
-        if (errorList.size() == 0) {
+        if (errorList.isEmpty()) {
             try {
                 claimsDaoRemote.insert(claims);
             } catch (Exception ex) {
@@ -76,7 +76,7 @@ public class ClaimsServiceBean implements ClaimsServiceRemote {
         if ("".equals(claims.getClaimResponse())) {
             errorList.add(messageSource.getString("claim_response_required"));
         }
-        if (errorList.size() == 0) {
+        if (errorList.isEmpty()) {
             try {
                 claimsDaoRemote.update(claims);
                 Users users = usersDaoRemote.selectByUserCode(claims.getClaimUserCode());
@@ -94,20 +94,20 @@ public class ClaimsServiceBean implements ClaimsServiceRemote {
                     pointsDaoRemote.insert(points);
                 }
                 if ("X".equals(claims.getClaimStatus()) || "C".equals(claims.getClaimStatus())) {
-                    String body = "";
+                    String body;
                     String subject = "";
                     body = users.getUserCode() + "\n\n";
                     if ("X".equals(claims.getClaimStatus())) {
                         subject = messageSource.getString("claim_status_notification1");
                         body = body + messageSource.getString("claim_reject_info1");
-                        body = body + users.getFullName() + " ";
+                        body = body + users.getFullName() + "\n\n";
                         body = body + claims.getClaimResponse() + "\n\n";
                         body = body + messageSource.getString("claim_reject_info2");
                     }
                     if ("C".equals(claims.getClaimStatus())) {
                         subject = messageSource.getString("claim_status_notification2");
                         body = body + messageSource.getString("claim_confirm_info1");
-                        body = body + users.getFullName() + " ";
+                        body = body + users.getFullName() + "\n\n";
                         body = body + claims.getClaimResponse() + "\n\n";
                         body = body + messageSource.getString("claim_confirm_info2");
                     }
@@ -162,7 +162,7 @@ public class ClaimsServiceBean implements ClaimsServiceRemote {
         if ("".equals(claims.getClaimDesc())) {
             errorList.add(messageSource.getString("claim_desc_required"));
         }
-        if (errorList.size() == 0) {
+        if (errorList.isEmpty()) {
             try {
                 if ("X".equals(claims.getClaimStatus())) {
                     Points points = new Points();

@@ -11,19 +11,9 @@ import galileoclub.ejb.dao.UsersDaoRemote;
 import galileoclub.ejb.dao.UsersRolesDaoRemote;
 import galileoclub.ejb.datamodel.PnrcountsDataModelBean;
 import galileoclub.ejb.datamodel.PnrcountsDataModelRemote;
-import galileoclub.jpa.Points;
-import galileoclub.jpa.Roles;
-import galileoclub.jpa.Users;
-import galileoclub.jpa.UsersRoles;
-import galileoclub.jpa.UsersRolesPK;
+import galileoclub.jpa.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -41,18 +31,19 @@ public class UsersServiceBean implements UsersServiceRemote {
     private static final Logger log = Logger.getLogger(UsersServiceBean.class.getName());
     private static final String MESSAGES = "ejbmessages";
     @EJB
-    private UsersDaoRemote usersDaoRemote = null;
+    private UsersDaoRemote usersDaoRemote;
     @EJB
-    private AppServiceRemote appServiceRemote = null;
+    private AppServiceRemote appServiceRemote;
     @EJB
-    private RolesDaoRemote rolesDaoRemote = null;
+    private RolesDaoRemote rolesDaoRemote;
     @EJB
-    private UsersRolesDaoRemote usersRolesDaoRemote = null;
+    private UsersRolesDaoRemote usersRolesDaoRemote;
     @EJB
-    private PnrcountsDataModelRemote pnrcountsDataModelRemote = null;
+    private PnrcountsDataModelRemote pnrcountsDataModelRemote;
     @EJB
-    private PointsDaoRemote pointsDaoRemote = null;
+    private PointsDaoRemote pointsDaoRemote;
 
+    @Override
     public List<String> saveCreate(Users users,
             String userPassword1, String userPassword2, Locale locale) {
         List<String> errorList = new ArrayList<String>();
@@ -127,6 +118,7 @@ public class UsersServiceBean implements UsersServiceRemote {
         return errorList;
     }
 
+    @Override
     public List<String> saveUpdate(Users users, Locale locale) {
         List<String> errorList = new ArrayList<String>();
         ResourceBundle messageSource = ResourceBundle.getBundle(MESSAGES, locale);
@@ -136,7 +128,7 @@ public class UsersServiceBean implements UsersServiceRemote {
         if ("".equals(users.getFullName())) {
             errorList.add(messageSource.getString("full_name_required"));
         }
-        if (errorList.size() == 0) {
+        if (errorList.isEmpty()) {
             try {
                 usersDaoRemote.update(users);
             } catch (Exception ex) {
@@ -147,13 +139,14 @@ public class UsersServiceBean implements UsersServiceRemote {
         return errorList;
     }
 
+    @Override
     public List<String> saveDelete(Users users, Locale locale) {
         List<String> errorList = new ArrayList<String>();
         ResourceBundle messageSource = ResourceBundle.getBundle(MESSAGES, locale);
         if (users.getUserId() == null || users.getUserId().intValue() == 0) {
             errorList.add(messageSource.getString("user_id_required"));
         }
-        if (errorList.size() == 0) {
+        if (errorList.isEmpty()) {
             try {
                 Roles roles = rolesDaoRemote.selectByRoleName("USR");
                 UsersRoles usersRoles = new UsersRoles();
@@ -172,6 +165,7 @@ public class UsersServiceBean implements UsersServiceRemote {
         return errorList;
     }
 
+    @Override
     public List<String> saveChangePassword(Users users,
             String userPassword1, String userPassword2, Locale locale) {
         List<String> errorList = new ArrayList<String>();
@@ -185,7 +179,7 @@ public class UsersServiceBean implements UsersServiceRemote {
         if (!userPassword1.equals(userPassword2)) {
             errorList.add(messageSource.getString("user_password_reconfirm_not_match"));
         }
-        if (errorList.size() == 0) {
+        if (errorList.isEmpty()) {
             try {
                 users.setUserPassword(appServiceRemote.hashPassword(userPassword1));
                 usersDaoRemote.update(users);
@@ -197,6 +191,7 @@ public class UsersServiceBean implements UsersServiceRemote {
         return errorList;
     }
 
+    @Override
     public List<String> logIn(String userName, String userPassword,
             Locale locale) {
         List<String> errorList = new ArrayList<String>();
@@ -226,13 +221,14 @@ public class UsersServiceBean implements UsersServiceRemote {
         return errorList;
     }
 
+    @Override
     public List<String> reject(Users users, Locale locale) {
         List<String> errorList = new ArrayList<String>();
         ResourceBundle messageSource = ResourceBundle.getBundle(MESSAGES, locale);
         if (users.getUserId() == null || users.getUserId().intValue() == 0) {
             errorList.add(messageSource.getString("user_id_required"));
         }
-        if (errorList.size() == 0) {
+        if (errorList.isEmpty()) {
             try {
                 ExecutorService es = Executors.newSingleThreadExecutor();
                 String body = messageSource.getString("user_reject_info1");
@@ -253,6 +249,7 @@ public class UsersServiceBean implements UsersServiceRemote {
         return errorList;
     }
 
+    @Override
     public List<String> activate(Users users, Locale locale, String userName) {
         users.setUserCode(usersDaoRemote.getNextUserCode());
         users.setUserStatus("A");
@@ -267,7 +264,7 @@ public class UsersServiceBean implements UsersServiceRemote {
         if ("".equals(users.getFullName())) {
             errorList.add(messageSource.getString("full_name_required"));
         }
-        if (errorList.size() == 0) {
+        if (errorList.isEmpty()) {
             try {
                 usersDaoRemote.update(users);
                 Roles roles = rolesDaoRemote.selectByRoleName("USR");
@@ -302,13 +299,14 @@ public class UsersServiceBean implements UsersServiceRemote {
         return errorList;
     }
 
+    @Override
     public List<String> transferToPoint(Users users, Locale locale) {
         List<String> errorList = new ArrayList<String>();
         ResourceBundle messageSource = ResourceBundle.getBundle(MESSAGES, locale);
         if (users.getUserId() == null || users.getUserId().intValue() == 0) {
             errorList.add(messageSource.getString("user_id_required"));
         }
-        if (errorList.size() == 0) {
+        if (errorList.isEmpty()) {
             try {
                 Map<String, Object> param = new HashMap<String, Object>();
                 param.put("pnrcountsPcc", users.getUserPcc());
@@ -356,6 +354,7 @@ public class UsersServiceBean implements UsersServiceRemote {
         return errorList;
     }
 
+    @Override
     public List<String> setUserPointValue(Integer userPointValueFrom, Integer userPointValueInto, Locale locale) {
         List<String> errorList = new ArrayList<String>();
         try {

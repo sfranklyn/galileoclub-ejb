@@ -27,8 +27,9 @@ public class PointsServiceBean implements PointsServiceRemote {
     private static final Logger log = Logger.getLogger(PointsServiceBean.class.getName());
     private static final String MESSAGES = "ejbmessages";
     @EJB
-    private PointsDaoRemote pointsDaoRemote = null;
+    private PointsDaoRemote pointsDaoRemote;
 
+    @Override
     public List<String> saveCreate(Points points, Locale locale) {
         List<String> errorList = new ArrayList<String>();
         ResourceBundle messageSource = ResourceBundle.getBundle(MESSAGES, locale);
@@ -50,7 +51,7 @@ public class PointsServiceBean implements PointsServiceRemote {
         if (points.getPointDay() <= 0) {
             errorList.add(messageSource.getString("point_day_must_greater_than_zero"));
         }
-        if (errorList.size() == 0) {
+        if (errorList.isEmpty()) {
             try {
                 DateTime pointDate = new DateTime(points.getPointYear(), points.getPointMonth(),
                         points.getPointDay(), 0, 0, 0, 0);
@@ -66,7 +67,7 @@ public class PointsServiceBean implements PointsServiceRemote {
                     cause = cause.getCause();
                 }
                 boolean invalidDate = false;
-                if (errorList.size() == 0) {
+                if (errorList.isEmpty()) {
                     if (ex.toString().contains("org.joda.time.IllegalFieldValueException")) {
                         errorList.add(messageSource.getString("point_date_not_valid"));
                         invalidDate = true;
@@ -82,13 +83,14 @@ public class PointsServiceBean implements PointsServiceRemote {
         return errorList;
     }
 
+    @Override
     public List<String> saveDelete(Points points, Locale locale) {
         List<String> errorList = new ArrayList<String>();
         ResourceBundle messageSource = ResourceBundle.getBundle(MESSAGES, locale);
         if (points.getPointId() == null || points.getPointId().intValue() == 0) {
             errorList.add(messageSource.getString("point_id_required"));
         }
-        if (errorList.size() == 0) {
+        if (errorList.isEmpty()) {
             try {
                 pointsDaoRemote.delete(points.getPointId());
             } catch (Exception ex) {
@@ -99,6 +101,7 @@ public class PointsServiceBean implements PointsServiceRemote {
         return errorList;
     }
 
+    @Override
     public List<String> saveUpdate(Points points, Locale locale) {
         List<String> errorList = new ArrayList<String>();
         ResourceBundle messageSource = ResourceBundle.getBundle(MESSAGES, locale);
@@ -123,7 +126,7 @@ public class PointsServiceBean implements PointsServiceRemote {
         if (points.getPointDay() <= 0) {
             errorList.add(messageSource.getString("point_day_must_greater_than_zero"));
         }
-        if (errorList.size() == 0) {
+        if (errorList.isEmpty()) {
             try {
                 DateTime pointDate = new DateTime(points.getPointYear(), points.getPointMonth(),
                         points.getPointDay(), 0, 0, 0, 0);

@@ -31,7 +31,7 @@ public class NewsServiceBean implements NewsServiceRemote {
     @PersistenceContext
     private EntityManager em;
     @EJB
-    private NewsDaoRemote newsDaoRemote = null;
+    private NewsDaoRemote newsDaoRemote;
 
     public List<String> saveCreate(News news, Locale locale) {
         List<String> errorList = new ArrayList<String>();

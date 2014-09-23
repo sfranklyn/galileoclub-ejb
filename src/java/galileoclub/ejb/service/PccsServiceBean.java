@@ -37,9 +37,9 @@ public class PccsServiceBean implements PccsServiceRemote {
     private static final String MESSAGES = "ejbmessages";
     private static final Pattern linePattern = Pattern.compile("\\r", Pattern.DOTALL | Pattern.MULTILINE);
     @EJB
-    private PccsDaoRemote pccsDaoRemote = null;
+    private PccsDaoRemote pccsDaoRemote;
     @EJB
-    private ConfigsServiceRemote configsServiceRemote = null;
+    private ConfigsServiceRemote configsServiceRemote;
 
     @Override
     public List<String> saveCreate(Pccs pccs, Locale locale) {
