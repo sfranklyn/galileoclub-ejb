@@ -5,28 +5,14 @@
  */
 package galileoclub.ejb.service;
 
-import com.galileoindonesia.schema.pnr.AirSeg;
-import com.galileoindonesia.schema.pnr.LNameInfo;
-import com.galileoindonesia.schema.pnr.PNRAddr;
-import com.galileoindonesia.schema.pnr.PNRBFManagement10;
-import com.galileoindonesia.schema.pnr.PNRBFRetrieve;
-import com.galileoindonesia.schema.pnr.PNRBFRetrieveMods;
+import com.galileoindonesia.schema.pnr.*;
 import com4j.COM4J;
 import galileoclub.ejb.dao.PccsDaoRemote;
 import galileoclub.ejb.dao.PnrcountsDaoRemote;
 import galileoclub.ejb.dao.PnrsDaoRemote;
 import galileoclub.ejb.dao.PointsDaoRemote;
-import galileoclub.ejb.datamodel.PccsDataModelBean;
-import galileoclub.ejb.datamodel.PccsDataModelRemote;
-import galileoclub.ejb.datamodel.PnrcountsDataModelBean;
-import galileoclub.ejb.datamodel.PnrcountsDataModelRemote;
-import galileoclub.ejb.datamodel.PnrsDataModelBean;
-import galileoclub.ejb.datamodel.PnrsDataModelRemote;
-import galileoclub.jpa.Configs;
-import galileoclub.jpa.Pccs;
-import galileoclub.jpa.Pnrcounts;
-import galileoclub.jpa.Pnrs;
-import galileoclub.jpa.Points;
+import galileoclub.ejb.datamodel.*;
+import galileoclub.jpa.*;
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.math.BigDecimal;
@@ -34,12 +20,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.Date;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -73,7 +54,7 @@ import org.joda.time.format.DateTimeFormatter;
 @Stateless
 public class SegmentCounterServiceBean implements SegmentCounterServiceRemote {
 
-    private static final Logger log = Logger.getLogger(SegmentCounterServiceBean.class.getName());    
+    private static final Logger log = Logger.getLogger(SegmentCounterServiceBean.class.getName());
     private static final Pattern linePattern = Pattern.compile("\\r", Pattern.DOTALL | Pattern.MULTILINE);
     private static final String xmlHeader = "<PNRBFManagement_10>";
     private static final String soapHeader = "<PNRBFManagement_10 " + "xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' " + "xmlns='http://www.galileoindonesia.com/schema/PNR' " + "xsi:schemaLocation='http://www.galileoindonesia.com/schema/PNR " + "PNRBFManagement10.xsd'>";
@@ -123,7 +104,7 @@ public class SegmentCounterServiceBean implements SegmentCounterServiceRemote {
 
             configs = configsServiceRemote.getByKey(ConfigsServiceBean.DEBUG_MODE);
             if (configs != null) {
-                if (((String)configs.getConfigValue()).equalsIgnoreCase("true")) {
+                if (((String) configs.getConfigValue()).equalsIgnoreCase("true")) {
                     debug = true;
                     String message = "GCLUB0001: Running on debug mode";
                     log.info(message);
@@ -277,7 +258,7 @@ public class SegmentCounterServiceBean implements SegmentCounterServiceRemote {
                             pnrs.setPnrsSignon(son);
                             Date created = day.toDate();
                             DateTimeFormatter dtfdMY = DateTimeFormat.forPattern("ddMMMyy");
-                            try {                                
+                            try {
                                 created = new Date(dtfdMY.parseDateTime(lines[idx1].substring(41, 48)).toDate().getTime());
                             } catch (Exception ex) {
                             }
@@ -365,7 +346,6 @@ public class SegmentCounterServiceBean implements SegmentCounterServiceRemote {
                     log.log(Level.SEVERE, message, ex);
                     sendMessage(message);
                 }
-                suta = null;
             }
         }
     }
@@ -389,7 +369,7 @@ public class SegmentCounterServiceBean implements SegmentCounterServiceRemote {
         @SuppressWarnings("unchecked")
         public void run() {
             Suta suta = null;
-            String result = null;
+            String result;
             String message;
             try {
                 Marshaller bookingMarshaller = bookingJc.createMarshaller();
@@ -480,15 +460,15 @@ public class SegmentCounterServiceBean implements SegmentCounterServiceRemote {
                                 pnrs.setPnrsNew(false);
                             } else {
                                 if (debug) {
-                                    message = "GCLUB0001:---" + recLoc + "," + segCountNewCount + "," + waitSegCountNewCount + "," + nameCount +
-                                            "," + dayYM + "," + createdYM;
+                                    message = "GCLUB0001:---" + recLoc + "," + segCountNewCount + "," + waitSegCountNewCount + "," + nameCount
+                                            + "," + dayYM + "," + createdYM;
                                     log.log(Level.WARNING, message);
                                 }
                             }
                         } else {
                             if (debug) {
-                                message = "GCLUB0001:***" + recLoc + "," + segCountNewCount + "," + waitSegCountNewCount + "," + nameCount +
-                                        "," + dayYM;
+                                message = "GCLUB0001:***" + recLoc + "," + segCountNewCount + "," + waitSegCountNewCount + "," + nameCount
+                                        + "," + dayYM;
                                 log.log(Level.WARNING, message);
                             }
                         }
@@ -509,8 +489,8 @@ public class SegmentCounterServiceBean implements SegmentCounterServiceRemote {
                             pnrs.setPnrsNew(false);
                         } else {
                             if (debug) {
-                                message = "GCLUB0001:*-*" + recLoc + "," + segCountNewCount + "," + waitSegCountNewCount + "," + nameCount +
-                                        "," + dayYM;
+                                message = "GCLUB0001:*-*" + recLoc + "," + segCountNewCount + "," + waitSegCountNewCount + "," + nameCount
+                                        + "," + dayYM;
                                 log.log(Level.WARNING, message);
                             }
                         }
@@ -537,7 +517,6 @@ public class SegmentCounterServiceBean implements SegmentCounterServiceRemote {
                         log.log(Level.SEVERE, message, ex);
                         sendMessage(message);
                     }
-                    suta = null;
                 }
             }
         }
@@ -588,12 +567,20 @@ public class SegmentCounterServiceBean implements SegmentCounterServiceRemote {
     @TransactionAttribute(TransactionAttributeType.NEVER)
     @Override
     public void transferToPoint(String yearMonth) {
-        Map<String, Object> param = new HashMap<String, Object>();
-        param.put("pnrcountsYearMonth", yearMonth);
-        List pnrCountsList = pnrcountsDataModelRemote.getAll(PnrcountsDataModelBean.SELECT_GROUP_BY_PCCSIGNON_BY_YEARMONTH, param, 0, -1);
         Integer pointYear = Integer.valueOf(yearMonth.substring(0, 4));
         Integer pointMonth = Integer.valueOf(yearMonth.substring(4, 6));
         pointsDaoRemote.deleteYearMonth(pointYear, pointMonth);
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("pnrcountsYearMonth", yearMonth);
+        List pnrCountsList = pnrcountsDataModelRemote.getAll(PnrcountsDataModelBean.SELECT_GROUP_BY_PCCSIGNON_BY_YEARMONTH, param, 0, -1);
+        transferToPoint1(yearMonth, pnrCountsList);
+        pnrCountsList = pnrcountsDataModelRemote.getAll(PnrcountsDataModelBean.SELECT_GROUP_BY_PCCSIGNON_BY_YEARMONTH1, param, 0, -1);
+        transferToPoint1(yearMonth, pnrCountsList);
+    }
+
+    private void transferToPoint1(String yearMonth, List pnrCountsList) throws NumberFormatException {
+        Integer pointYear = Integer.valueOf(yearMonth.substring(0, 4));
+        Integer pointMonth = Integer.valueOf(yearMonth.substring(4, 6));
         for (Object obj : pnrCountsList) {
             Object[] objArray = (Object[]) obj;
             String pcc = (String) objArray[0];

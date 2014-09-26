@@ -327,6 +327,23 @@ import org.apache.commons.lang.builder.ToStringStyle;
     + "group by "
     + "pnrcounts_pcc, "
     + "pnrcounts_signon"),
+    @NamedNativeQuery(name = "Pnrcounts.selectGroupByPccSignOnByYearMonth1",
+    query = "select pnrcounts_pcc,"
+    + "pnrcounts_signon,"
+    + "user_code,"
+    + "sum(pnrcounts_count) as pnrcounts_count,"
+    + "user_point_value "
+    + "from pnrcounts, users, pccs, users_pccs "
+    + "where "
+    + "users_pccs.user_id=users.user_id and "    
+    + "users_pccs.pccs_id=pccs.pccs_id and "    
+    + "pccs.pccs_pcc=pnrcounts_pcc and "
+    + "users_pccs.user_pcc_son=pnrcounts_signon and "
+    + "user_code is not null and "
+    + "pnrcounts_yearmonth=#pnrcountsYearMonth "
+    + "group by "
+    + "pnrcounts_pcc, "
+    + "pnrcounts_signon"),
     @NamedNativeQuery(name = "Pnrcounts.selectGroupByYearMonthByPccSignOn",
     query = "select "
     + "pnrcounts_yearmonth,"

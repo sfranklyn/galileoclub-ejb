@@ -1,7 +1,7 @@
 /*
  * UsersPccs.java
  * 
- * Created on Sep 8, 2014, 9:07:54 AM
+ * Created on Sep 25, 2014, 9:38:23 AM
  */
 package galileoclub.jpa;
 
@@ -27,24 +27,18 @@ import org.apache.commons.lang.builder.ToStringStyle;
     query = "SELECT COUNT(u) FROM UsersPccs u WHERE u.users = :users")
 })
 public class UsersPccs implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected UsersPccsPK usersPccsPK;
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id",
-    nullable = false, insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Users users;
-    @JoinColumn(name = "pccs_id", referencedColumnName = "pccs_id",
-    nullable = false, insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Pccs pccs;
-    @Column(name = "user_pcc_son", nullable = false, length = 10)
-    private String userPccSon;
-    @Version
     @Basic(optional = false)
     @Column(name = "user_pcc_version", nullable = false)
     private int userPccVersion;
+    @JoinColumn(name = "pccs_id", referencedColumnName = "pccs_id", nullable = false, insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private Pccs pccs;
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private Users users;
 
     public UsersPccs() {
     }
@@ -58,8 +52,8 @@ public class UsersPccs implements Serializable {
         this.userPccVersion = userPccVersion;
     }
 
-    public UsersPccs(int userId, int pccsId) {
-        this.usersPccsPK = new UsersPccsPK(userId, pccsId);
+    public UsersPccs(int userId, int pccsId, String userPccSon) {
+        this.usersPccsPK = new UsersPccsPK(userId, pccsId, userPccSon);
     }
 
     public UsersPccsPK getUsersPccsPK() {
@@ -78,20 +72,20 @@ public class UsersPccs implements Serializable {
         this.userPccVersion = userPccVersion;
     }
 
-    public Users getUsers() {
-        return users;
-    }
-
-    public void setUsers(Users users) {
-        this.users = users;
-    }
-
     public Pccs getPccs() {
         return pccs;
     }
 
     public void setPccs(Pccs pccs) {
         this.pccs = pccs;
+    }
+
+    public Users getUsers() {
+        return users;
+    }
+
+    public void setUsers(Users users) {
+        this.users = users;
     }
 
     @Override
@@ -103,6 +97,7 @@ public class UsersPccs implements Serializable {
 
     @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof UsersPccs)) {
             return false;
         }
@@ -117,12 +112,5 @@ public class UsersPccs implements Serializable {
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
-
-    public String getUserPccSon() {
-        return userPccSon;
-    }
-
-    public void setUserPccSon(String userPccSon) {
-        this.userPccSon = userPccSon;
-    }
+    
 }

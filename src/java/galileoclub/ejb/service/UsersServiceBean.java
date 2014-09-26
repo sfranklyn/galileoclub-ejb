@@ -11,6 +11,8 @@ import galileoclub.ejb.dao.UsersDaoRemote;
 import galileoclub.ejb.dao.UsersRolesDaoRemote;
 import galileoclub.ejb.datamodel.PnrcountsDataModelBean;
 import galileoclub.ejb.datamodel.PnrcountsDataModelRemote;
+import galileoclub.ejb.datamodel.UsersPccsDataModelBean;
+import galileoclub.ejb.datamodel.UsersPccsDataModelRemote;
 import galileoclub.jpa.*;
 import java.math.BigDecimal;
 import java.util.*;
@@ -42,6 +44,8 @@ public class UsersServiceBean implements UsersServiceRemote {
     private PnrcountsDataModelRemote pnrcountsDataModelRemote;
     @EJB
     private PointsDaoRemote pointsDaoRemote;
+    @EJB
+    private UsersPccsDataModelRemote usersPccsDataModelRemote;
 
     @Override
     public List<String> saveCreate(Users users,
@@ -311,40 +315,16 @@ public class UsersServiceBean implements UsersServiceRemote {
                 Map<String, Object> param = new HashMap<String, Object>();
                 param.put("pnrcountsPcc", users.getUserPcc());
                 param.put("pnrcountsSignon", users.getUserSon());
-                List pnrCountsList = pnrcountsDataModelRemote.getAll(PnrcountsDataModelBean.SELECT_GROUP_BY_YEARMONTH_BY_PCCSIGNON, param, 0, -1);
-                for (Object obj : pnrCountsList) {
-                    Object[] objArray = (Object[]) obj;
-                    String yearmonth = (String) objArray[0];
-                    BigDecimal count = (BigDecimal) objArray[1];
-                    param.put("pointUserCode", users.getUserCode());
-                    param.put("pointPcc", users.getUserPcc());
-                    param.put("pointSignon", users.getUserSon());
-                    param.put("pointYear", Integer.valueOf(yearmonth.substring(0, 4)));
-                    param.put("pointMonth", Integer.valueOf(yearmonth.substring(4, 6)));
-                    param.put("pointDay", 1);
-                    List<Points> pointsList = pointsDaoRemote.selectByUserCodePccSignOnYearMonthDay(param);
-                    if (pointsList.size() <= 0) {
-                        Points points = new Points();
-                        points.setPointUserCode((String) param.get("pointUserCode"));
-                        points.setPointPcc((String) param.get("pointPcc"));
-                        points.setPointSignon((String) param.get("pointSignon"));
-                        points.setPointYear((Integer) param.get("pointYear"));
-                        points.setPointMonth((Integer) param.get("pointMonth"));
-                        points.setPointDay((Integer) param.get("pointDay"));
-                        points.setPointCount(count.intValue());
-                        if (users.getUserPointValue() != null) {
-                            points.setPointValue(users.getUserPointValue());
-                        }
-                        pointsDaoRemote.insert(points);
-                    } else {
-                        for (Points points : pointsList) {
-                            points.setPointCount(count.intValue());
-                            if (users.getUserPointValue() != null) {
-                                points.setPointValue(users.getUserPointValue());
-                            }
-                            pointsDaoRemote.update(points);
-                        }
-                    }
+                transferToPoint1(param, users);
+                param = new HashMap<String, Object>();
+                param.put("users", users);
+                List usersPccsList = usersPccsDataModelRemote.getAll(UsersPccsDataModelBean.SELECT_BY_USER, param, 0, -1);
+                for (Object obj : usersPccsList) {
+                    UsersPccs usersPccs = (UsersPccs) obj;
+                    param = new HashMap<String, Object>();
+                    param.put("pnrcountsPcc", usersPccs.getPccs().getPccsPcc());
+                    param.put("pnrcountsSignon", usersPccs.getUsersPccsPK().getUserPccSon());
+                    transferToPoint1(param, usersPccs.getUsers());
                 }
             } catch (Exception ex) {
                 errorList.add(ex.toString());
@@ -352,6 +332,44 @@ public class UsersServiceBean implements UsersServiceRemote {
             }
         }
         return errorList;
+    }
+
+    private void transferToPoint1(Map<String, Object> param, Users users) throws NumberFormatException {
+        List pnrCountsList = pnrcountsDataModelRemote.getAll(PnrcountsDataModelBean.SELECT_GROUP_BY_YEARMONTH_BY_PCCSIGNON, param, 0, -1);
+        for (Object obj : pnrCountsList) {
+            Object[] objArray = (Object[]) obj;
+            String yearmonth = (String) objArray[0];
+            BigDecimal count = (BigDecimal) objArray[1];
+            param.put("pointUserCode", users.getUserCode());
+            param.put("pointPcc", (String) param.get("pnrcountsPcc"));
+            param.put("pointSignon", (String) param.get("pnrcountsSignon"));
+            param.put("pointYear", Integer.valueOf(yearmonth.substring(0, 4)));
+            param.put("pointMonth", Integer.valueOf(yearmonth.substring(4, 6)));
+            param.put("pointDay", 1);
+            List<Points> pointsList = pointsDaoRemote.selectByUserCodePccSignOnYearMonthDay(param);
+            if (pointsList.size() <= 0) {
+                Points points = new Points();
+                points.setPointUserCode((String) param.get("pointUserCode"));
+                points.setPointPcc((String) param.get("pointPcc"));
+                points.setPointSignon((String) param.get("pointSignon"));
+                points.setPointYear((Integer) param.get("pointYear"));
+                points.setPointMonth((Integer) param.get("pointMonth"));
+                points.setPointDay((Integer) param.get("pointDay"));
+                points.setPointCount(count.intValue());
+                if (users.getUserPointValue() != null) {
+                    points.setPointValue(users.getUserPointValue());
+                }
+                pointsDaoRemote.insert(points);
+            } else {
+                for (Points points : pointsList) {
+                    points.setPointCount(count.intValue());
+                    if (users.getUserPointValue() != null) {
+                        points.setPointValue(users.getUserPointValue());
+                    }
+                    pointsDaoRemote.update(points);
+                }
+            }
+        }
     }
 
     @Override

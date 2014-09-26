@@ -33,6 +33,7 @@ public class PnrcountsDataModelBean extends BaseDataModelBean implements Pnrcoun
     public static final String SELECT_BY_DATEPCCSIGNON = "Pnrcounts.selectByDatePccSignOn";
     public static final String SELECT_BY_DATEPCCSIGNON_COUNT = "Pnrcounts.selectByDatePccSignOnCount";
     public static final String SELECT_GROUP_BY_PCCSIGNON_BY_YEARMONTH = "Pnrcounts.selectGroupByPccSignOnByYearMonth";
+    public static final String SELECT_GROUP_BY_PCCSIGNON_BY_YEARMONTH1 = "Pnrcounts.selectGroupByPccSignOnByYearMonth1";
     public static final String SELECT_BY_DATEPCC = "Pnrcounts.selectByDatePcc";
     public static final String SELECT_BY_DATEPCC_COUNT = "Pnrcounts.selectByDatePccCount";
     public static final String SELECT_GROUP_BY_PCCFIND = "Pnrcounts.selectGroupByPccFind";

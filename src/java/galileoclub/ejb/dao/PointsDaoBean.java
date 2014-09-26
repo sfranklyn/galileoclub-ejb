@@ -27,6 +27,7 @@ public class PointsDaoBean implements PointsDaoRemote {
     private EntityManager em;
 
     @SuppressWarnings("unchecked")
+    @Override
     public List<Points> findPointsByUserCode(String userCode, Boolean ascending) {
         Query query;
         if(ascending) {
@@ -44,6 +45,7 @@ public class PointsDaoBean implements PointsDaoRemote {
         return pointsList;
     }
 
+    @Override
     public Long sumByPointUserCode(String userCode) {
         Query query = em.createNamedQuery("Points.sumByPointUserCode");
         query.setParameter("pointUserCode", userCode);
@@ -55,6 +57,7 @@ public class PointsDaoBean implements PointsDaoRemote {
         return count;
     }
 
+    @Override
     public void deleteYearMonth(Integer pointYear, Integer pointMonth) {
         Query query = em.createNamedQuery("Points.deleteYearMonth");
         query.setParameter(1, pointYear);
@@ -63,23 +66,27 @@ public class PointsDaoBean implements PointsDaoRemote {
         em.flush();
     }
 
+    @Override
     public void insert(Points points) {
         em.persist(points);
         em.flush();
     }
 
+    @Override
     public void delete(Integer pointId) {
         Points points = em.find(Points.class, pointId);
         em.remove(points);
         em.flush();
     }
 
+    @Override
     public void update(Points points) {
         em.merge(points);
         em.flush();
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public List<Points> selectPointsByClaims(Claims claims) {
         Query query = em.createNamedQuery("Points.selectByClaims");
         query.setParameter("claims", claims);
@@ -92,6 +99,7 @@ public class PointsDaoBean implements PointsDaoRemote {
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public List<Points> selectByUserCodePccSignOnYearMonthDay(Map param) {
         Query query = em.createNamedQuery("Points.selectByUserCodePccSignOnYearMonthDay");
         query.setParameter("pointUserCode", param.get("pointUserCode"));
