@@ -11,21 +11,7 @@ import java.util.Collection;
 import java.util.Date;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import javax.persistence.*;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -199,27 +185,4 @@ public class Claims implements Serializable {
         this.pointsCollection = pointsCollection;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (claimId != null ? claimId.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        if (!(object instanceof Claims)) {
-            return false;
-        }
-        Claims other = (Claims) object;
-        if ((this.claimId == null && other.claimId != null) || (this.claimId != null && !this.claimId.equals(other.claimId))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
-    }
 }

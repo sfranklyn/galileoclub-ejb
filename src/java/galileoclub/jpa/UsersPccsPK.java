@@ -9,8 +9,6 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
  *
@@ -61,37 +59,4 @@ public class UsersPccsPK implements Serializable {
         this.userPccSon = userPccSon;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (int) userId;
-        hash += (int) pccsId;
-        hash += (userPccSon != null ? userPccSon.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UsersPccsPK)) {
-            return false;
-        }
-        UsersPccsPK other = (UsersPccsPK) object;
-        if (this.userId != other.userId) {
-            return false;
-        }
-        if (this.pccsId != other.pccsId) {
-            return false;
-        }
-        if ((this.userPccSon == null && other.userPccSon != null) || (this.userPccSon != null && !this.userPccSon.equals(other.userPccSon))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
-    }
-    
 }

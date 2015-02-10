@@ -7,8 +7,6 @@ package galileoclub.jpa;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
  *
@@ -88,29 +86,4 @@ public class UsersPccs implements Serializable {
         this.users = users;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (usersPccsPK != null ? usersPccsPK.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UsersPccs)) {
-            return false;
-        }
-        UsersPccs other = (UsersPccs) object;
-        if ((this.usersPccsPK == null && other.usersPccsPK != null) || (this.usersPccsPK != null && !this.usersPccsPK.equals(other.usersPccsPK))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
-    }
-    
 }

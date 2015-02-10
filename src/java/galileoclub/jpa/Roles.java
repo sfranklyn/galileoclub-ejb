@@ -6,20 +6,7 @@
 package galileoclub.jpa;
 
 import java.io.Serializable;
-import java.util.Collection;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Version;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import javax.persistence.*;
 
 /**
  *
@@ -116,27 +103,4 @@ public class Roles implements Serializable {
         this.roleVersion = roleVersion;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (roleId != null ? roleId.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        if (!(object instanceof Roles)) {
-            return false;
-        }
-        Roles other = (Roles) object;
-        if ((this.roleId == null && other.roleId != null) || (this.roleId != null && !this.roleId.equals(other.roleId))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
-    }
 }
