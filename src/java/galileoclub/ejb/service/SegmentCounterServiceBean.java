@@ -202,8 +202,8 @@ public class SegmentCounterServiceBean implements SegmentCounterServiceRemote {
             DateTimeFormatter dtfdM = DateTimeFormat.forPattern("ddMMM");
             String dayStr = dtfdM.print(day).toUpperCase();
 
-            DateTime sixMonth = day.plusMonths(6);
-            String sixMonthStr = dtfdM.print(sixMonth).toUpperCase();
+            DateTime threeHundredThirty = day.plusDays(330);
+            String threeHundredThirtyStr = dtfdM.print(threeHundredThirty).toUpperCase();
 
             Map<String, Object> param = new HashMap<String, Object>();
 
@@ -244,7 +244,7 @@ public class SegmentCounterServiceBean implements SegmentCounterServiceRemote {
                 String pcc = pccs.getPccsPcc();
                 param.put("pnrsPcc", pcc);
                 terminalSubmit(suta, "SEM/" + pcc + "/AG");
-                res = terminalSubmit(suta, "LD/ALL/" + dayStr + "*" + sixMonthStr + "-D");
+                res = terminalSubmit(suta, "LD/ALL/" + dayStr + "*" + threeHundredThirtyStr + "-D");
                 String[] lines = linePattern.split(res);
                 while (lines != null) {
                     for (int idx1 = 0; idx1 < lines.length; idx1++) {
